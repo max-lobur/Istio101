@@ -74,7 +74,7 @@ Visit the External IP of the "istio-ingressgateway". At this point, you should g
 
 Right now, the gateway is not set-up, so it is dropping all traffic at the edge. Let's set it up with this command:
 
-`kubectl create -f ./configs/istio/ingress.yaml` (make ingress)
+`make ingress`
 
 This file contains two objects. The first object is a Gateway, which will allow us to bind to the "istio-ingressgateway" that exists in the cluster. The second object is a VirtualService, which let's us apply routing rules. Because we are using a wildcard (*) charater for the host and only one route rule, all traffic from this gateway to the frontend service.
 
@@ -98,7 +98,7 @@ You can see the ServiceEntry that we are creating [here](./configs/istio/egress.
 
 To apply this rule, run:
 
-`kubectl apply -f ./configs/istio/egress.yaml`
+`make egress`
 
 Now, you should see the services fully working!
 
@@ -388,33 +388,6 @@ In our code, we calculate a random Fibonacci number and then sleep for a bit. It
 
 You can see all the nested traces, and the really cool thing is that you can see the traces for all three microservices at the same time! This is because OpenCensus and Istio are using the same IDs throughout the stack.
 
-# Custom Metrics
+# Cleanup
 
-While Istio can give you a lot of network level metrics, once again it is not able to give you app specific metrics that you might care about. Just like app-level tracing, OpenCensus can help you with app-level metrics as well.
-
-**COMING SOOON!**
-
-# Shutting Down The Test Cluster
-
-`make delete-cluster`
-
-or
-
-`make delete-cluster PROJECT_ID=your-custom-id-here ZONE=your-custom-zone`
-
-
-# Advanced
-
-## Customize the Istio Deployment
-
-If you want to customize the components of Istio that are installed, you can do that with Helm! First, you need to download the 1.0 release of Istio which contains the Helm charts you need.
-
-`make download-istio`
-
-Then, you can generate the Istio yaml that I use for this demo with the following command:
-
-`helm template istio-1.0.0/install/kubernetes/helm/istio --name istio --namespace istio-system --set global.mtls.enabled=true --set tracing.enabled=true --set servicegraph.enabled=true --set grafana.enabled=true > istio.yaml`
-
-Feel free to [modify this command](https://istio.io/docs/reference/config/installation-options/) to suite your needs, but note that this demo won't work without these things enabled!
-
-NOTE: This is not an official Google product
+`make cleanup`

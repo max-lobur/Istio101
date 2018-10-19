@@ -32,38 +32,49 @@ push:
 
 deploy-istio:
 	kubectl create namespace istio-system
+	kns istio-system
 	kubectl apply -f istio.yaml
+	sleep 60
 	kubectl create namespace istio101
 	kubectl label namespace istio101 istio-injection=enabled --overwrite
 
 ingress:
+	kns istio101
 	kubectl apply -f ./configs/istio/ingress.yaml
 
 egress:
+	kns istio101
 	kubectl apply -f ./configs/istio/egress.yaml
 
 deploy-stuff:
+	kns istio101
 	kubectl apply -f ./configs/kube/services.yaml
 	kubectl apply -f ./configs/kube/deployments.yaml
 
 get-stuff:
+	kns istio101
 	kubectl get pods && kubectl get svc && kubectl get svc istio-ingressgateway -n istio-system
 
 prod:
+	kns istio101
 	kubectl apply -f ./configs/istio/destinationrules.yaml
 	kubectl apply -f ./configs/istio/routing-1.yaml
 
 retry:
+	kns istio101
 	kubectl apply -f ./configs/istio/routing-2.yaml
 
 canary:
+	kns istio101
 	kubectl apply -f ./configs/istio/routing-3.yaml
 
 deploy-opencensus-code:
+	kns istio101
 	kubectl apply -f ./configs/opencensus/config.yaml
 	kubectl apply -f ./configs/opencensus/deployment.yaml
 
 update-opencensus-deployment:
+	kns istio101
 	kubectl apply -f ./configs/kube/services2.yaml
 	kubectl apply -f ./configs/opencensus/deployment2.yaml
 
@@ -78,4 +89,5 @@ open-monitoring:
 	@echo "ServiceGraph: http://localhost:${SERVICEGRAPH_PORT}"
 
 cleanup:
+	kns default
 	kubectl delete ns istio101 istio-system
