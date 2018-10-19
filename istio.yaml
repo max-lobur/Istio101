@@ -4047,7 +4047,7 @@ spec:
       serviceAccountName: istio-sidecar-injector-service-account
       containers:
         - name: sidecar-injector-webhook
-          image: "docker.io/istio/sidecar_injector:1.0.0"
+          image: "docker.io/istio/sidecar_injector:1.0.2"
           imagePullPolicy: IfNotPresent
           args:
             - --caCertFile=/etc/istio/certs/root-cert.pem
@@ -4057,6 +4057,7 @@ spec:
             - --meshConfig=/etc/istio/config/mesh
             - --healthCheckInterval=2s
             - --healthCheckFile=/health
+            #- --log_output_level=default:debug
           volumeMounts:
           - name: config-volume
             mountPath: /etc/istio/config

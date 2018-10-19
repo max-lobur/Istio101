@@ -48,7 +48,7 @@ egress:
 
 deploy-stuff:
 	kns istio101
-	kubectl apply -f ./configs/kube/services.yaml
+	kubectl apply -f ./configs/kube/services2.yaml
 	kubectl apply -f ./configs/kube/deployments.yaml
 
 get-stuff:

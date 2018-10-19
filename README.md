@@ -62,7 +62,7 @@ We have launched Istio in "auto inject" mode. After the Makefile deployed Istio,
 
 `kubectl label namespace istio101 istio-injection=enabled`
 
-This means that any Pods that Kubernetes creates in the default namespace will automatically get a Istio sidecar proxy attached to it. This proxy will enforce Istio policies without any action from the app! You can also run Istio in the normal mode, and add the proxy into the Kubernetes YAML manually. Again, there is no change to the app, but the Kubernetes Deployment is manually patched. This is useful if you want some services to bypass Istio.
+This means that any Pods that Kubernetes creates in the istio101 namespace will automatically get a Istio sidecar proxy attached to it. This proxy will enforce Istio policies without any action from the app! You can also run Istio in the normal mode, and add the proxy into the Kubernetes YAML manually. Again, there is no change to the app, but the Kubernetes Deployment is manually patched. This is useful if you want some services to bypass Istio.
 
 ## Trying it out
 
