@@ -5,17 +5,10 @@ You already have it in AWS. K8S 1.10+, kubectl v1.10+
 
 ## Create Docker Container
 
+You can skip this step. All images are public on docker hub.
 To build and push the code, run:
 
 `make build push`
-
-This will create the Docker containers and push it up to your Google Container Registry. 
-
-Again, you can pass in a custom project ID, but make sure it is the same as before:
-
-`make build push PROJECT_ID=your-custom-id-here`
-
-*Note:* This will build three containers, one for the vanilla Istio demo, and two for the OpenCensus demo.
 
 ## Deploy Kubernetes Services
 
