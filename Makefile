@@ -11,19 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-JAEGER_POD_NAME=$( kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}')
+JAEGER_POD_NAME=$(shell kubectl -n istio-system get pod -l app=jaeger -o jsonpath='{.items[0].metadata.name}')
 JAEGER_PORT=16686
-
-SERVICEGRAPH_POD_NAME=$( kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}')
+SERVICEGRAPH_POD_NAME=$(shell kubectl -n istio-system get pod -l app=servicegraph -o jsonpath='{.items[0].metadata.name}')
 SERVICEGRAPH_PORT=8088
-
-GRAFANA_POD_NAME=$( kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}')
+GRAFANA_POD_NAME=$(shell kubectl -n istio-system get pod -l app=grafana -o jsonpath='{.items[0].metadata.name}')
 GRAFANA_PORT=3000
-
-PROMETHEUS_POD_NAME=$( kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}')
+PROMETHEUS_POD_NAME=$(shell kubectl -n istio-system get pod -l app=prometheus -o jsonpath='{.items[0].metadata.name}')
 PROMETHEUS_PORT=9090
-
-CONTAINER_NAME=istiotest
 
 build:
 	docker build -t lobur/istiotest:1.0 ./code/code-only-istio
@@ -38,14 +33,18 @@ push:
 deploy-istio:
 	kubectl create namespace istio-system
 	kubectl apply -f istio.yaml
-	kubectl label namespace default istio-injection=enabled --overwrite
+	kubectl create namespace istio101
+	kubectl label namespace istio101 istio-injection=enabled --overwrite
 
-start-monitoring-services:
-	$( kubectl -n istio-system port-forward $(JAEGER_POD_NAME) $(JAEGER_PORT):$(JAEGER_PORT) & kubectl -n istio-system port-forward $(SERVICEGRAPH_POD_NAME) $(SERVICEGRAPH_PORT):$(SERVICEGRAPH_PORT) & kubectl -n istio-system port-forward $(GRAFANA_POD_NAME) $(GRAFANA_PORT):$(GRAFANA_PORT) & kubectl -n istio-system port-forward $(PROMETHEUS_POD_NAME) $(PROMETHEUS_PORT):$(PROMETHEUS_PORT))
-    $( echo "Jaeger: http://localhost:$JAEGER_PORT")
-    $( echo "Grafana: http://localhost:$GRAFANA_PORT")
-    $( echo "Prometheus: http://localhost:PROMETHEUS_PORT")
-    $( echo "ServiceGraph: http://localhost:SERVICEGRAPH_PORT")
+open-monitoring:
+	kubectl -n istio-system port-forward ${JAEGER_POD_NAME} ${JAEGER_PORT}:${JAEGER_PORT} &
+	kubectl -n istio-system port-forward ${SERVICEGRAPH_POD_NAME} ${SERVICEGRAPH_PORT}:${SERVICEGRAPH_PORT} &
+	kubectl -n istio-system port-forward ${GRAFANA_POD_NAME} ${GRAFANA_PORT}:${GRAFANA_PORT} &
+	kubectl -n istio-system port-forward ${PROMETHEUS_POD_NAME} ${PROMETHEUS_PORT}:${PROMETHEUS_PORT} &
+	@echo "Jaeger: http://localhost:${JAEGER_PORT}"
+	@echo "Grafana: http://localhost:${GRAFANA_PORT}"
+	@echo "Prometheus: http://localhost:${PROMETHEUS_PORT}"
+	@echo "ServiceGraph: http://localhost:${SERVICEGRAPH_PORT}"
 
 deploy-stuff:
 	kubectl apply -f ./configs/kube/services.yaml

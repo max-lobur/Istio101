@@ -1,17 +1,21 @@
 # Istio and OpenCensus 101
 
-## Cluster Setup
+### Cluster Setup
 You already have it in AWS. K8S 1.10+, kubectl v1.10+
 
-## Create Docker Container
-
+### Build Docker Images
 You can skip this step. All images are public on docker hub.
-To build and push the code, run:
 
-`make build push`
+To build and push the code, run: `make build push`
 
-## Deploy Kubernetes Services
+### Deploy Istio
+The following will create `istio-system` namespace and deploy lots of stuff there:
+`make deploy-istio`
 
+### Open Monitoring
+`make open-monitoring`
+
+### Deploy Kubernetes Services
 This will create the three Deployments and the three Services.
 
 `make deploy-stuff`
