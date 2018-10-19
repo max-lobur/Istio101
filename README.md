@@ -1,51 +1,7 @@
-# Istio and OpenCensus 101 - Lightning Demo
-
-This is the code I use for my Istio 101 talk and Istio and OpenCensus talk. Please take a look! I assume some prior knowledge of Kubernetes, but it's not totally required.
-
-Talk Video:
-[![Talk YouTube Link](https://i.ytimg.com/vi/8OjOGJKM98o/maxresdefault.jpg)](https://www.youtube.com/watch?v=8OjOGJKM98o)
-
-# TL;DR - I want to skip setup
-
-Run this:
-
-`make create-cluster deploy-istio build push deploy-stuff`
-
-Run this in another terminal:
-
-`make start-monitoring-services`
-
-# Setup
+# Istio and OpenCensus 101
 
 ## Cluster Setup
-You need a Kubernetes 1.10 or newer cluster.
-
-You will also need Docker and kubectl 1.9.x or newer installed on your machine, as well as the Google Cloud SDK. You can install the Google Cloud SDK (which will also install kubectl) [here](https://cloud.google.com/sdk).
-
-To create the cluster with Google Kubernetes Engine, run this command:
-
-`make create-cluster`
-
-This will create a cluster called "my-istio-cluster" with 4 nodes in the us-west1-b region. This will deploy into the current active project set in your Google Cloud SDK. You can change this by passing in a custom value for the Project ID and/or Zone.
-
-`make create-cluster PROJECT_ID=your-custom-id-here ZONE=your-custom-zone`
-
-## Istio Setup
-This project assumes you are running on x64 Linux. If you are running on another platform, I highly reccomend using [Google Cloud Shell](https://cloud.google.com/shell) to get a free x64 Linux environment.
-
-To deploy Istio into the cluster, run
-
-`make deploy-istio`
-
-This will deploy the Istio services and control plane into your Kubernetes Cluster. Istio will create its own Kubernetes Namespace and a bunch of services and deployments. In addition, this command will install helper services. Jaeger for tracing, Prometheus for monitoring, Servicegraph to visualize your microservices, and Grafana for viewing metrics.
-
-## Start Helper Services
-
-Run this in another terminal:
-
-`make start-monitoring-services`
-
-This will create tunnels into your Kubernetes cluster for [Jaeger](http://localhost:16686), [Servicegraph](http://localhost:8088), and [Grafana](http://localhost:3000). This command will not exit as it keeps the connection open.
+You already have it in AWS. K8S 1.10+, kubectl v1.10+
 
 ## Create Docker Container
 
