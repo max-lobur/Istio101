@@ -46,18 +46,18 @@ open-monitoring:
 	@echo "Prometheus: http://localhost:${PROMETHEUS_PORT}"
 	@echo "ServiceGraph: http://localhost:${SERVICEGRAPH_PORT}"
 
+ingress:
+	kubectl apply -f ./configs/istio/ingress.yaml
+
+egress:
+	kubectl apply -f ./configs/istio/egress.yaml
+
 deploy-stuff:
 	kubectl apply -f ./configs/kube/services.yaml
 	kubectl apply -f ./configs/kube/deployments.yaml
 
 get-stuff:
 	kubectl get pods && kubectl get svc && kubectl get svc istio-ingressgateway -n istio-system
-
-ingress:
-	kubectl apply -f ./configs/istio/ingress.yaml
-
-egress:
-	kubectl apply -f ./configs/istio/egress.yaml
 
 prod:
 	kubectl apply -f ./configs/istio/destinationrules.yaml
