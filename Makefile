@@ -36,16 +36,6 @@ deploy-istio:
 	kubectl create namespace istio101
 	kubectl label namespace istio101 istio-injection=enabled --overwrite
 
-open-monitoring:
-	kubectl -n istio-system port-forward ${JAEGER_POD_NAME} ${JAEGER_PORT}:${JAEGER_PORT} &
-	kubectl -n istio-system port-forward ${SERVICEGRAPH_POD_NAME} ${SERVICEGRAPH_PORT}:${SERVICEGRAPH_PORT} &
-	kubectl -n istio-system port-forward ${GRAFANA_POD_NAME} ${GRAFANA_PORT}:${GRAFANA_PORT} &
-	kubectl -n istio-system port-forward ${PROMETHEUS_POD_NAME} ${PROMETHEUS_PORT}:${PROMETHEUS_PORT} &
-	@echo "Jaeger: http://localhost:${JAEGER_PORT}"
-	@echo "Grafana: http://localhost:${GRAFANA_PORT}"
-	@echo "Prometheus: http://localhost:${PROMETHEUS_PORT}"
-	@echo "ServiceGraph: http://localhost:${SERVICEGRAPH_PORT}"
-
 ingress:
 	kubectl apply -f ./configs/istio/ingress.yaml
 
@@ -69,15 +59,23 @@ retry:
 canary:
 	kubectl apply -f ./configs/istio/routing-3.yaml
 
-cleanup:
-	kubectl delete ns istio101 istio-system
-
-start-opencensus-demo: deploy-stuff ingress egress prod
-
 deploy-opencensus-code:
 	kubectl apply -f ./configs/opencensus/config.yaml
-	-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/opencensus/deployment.yaml | kubectl apply -f -
+	kubectl apply -f ./configs/opencensus/deployment.yaml
 
 update-opencensus-deployment:
 	kubectl apply -f ./configs/kube/services2.yaml
-	-sed -e 's~<PROJECT_ID>~$(PROJECT_ID)~g' ./configs/opencensus/deployment2.yaml | kubectl apply -f -
+	kubectl apply -f ./configs/opencensus/deployment2.yaml
+
+open-monitoring:
+	kubectl -n istio-system port-forward ${JAEGER_POD_NAME} ${JAEGER_PORT}:${JAEGER_PORT} &
+	kubectl -n istio-system port-forward ${SERVICEGRAPH_POD_NAME} ${SERVICEGRAPH_PORT}:${SERVICEGRAPH_PORT} &
+	kubectl -n istio-system port-forward ${GRAFANA_POD_NAME} ${GRAFANA_PORT}:${GRAFANA_PORT} &
+	kubectl -n istio-system port-forward ${PROMETHEUS_POD_NAME} ${PROMETHEUS_PORT}:${PROMETHEUS_PORT} &
+	@echo "Jaeger: http://localhost:${JAEGER_PORT}"
+	@echo "Grafana: http://localhost:${GRAFANA_PORT}"
+	@echo "Prometheus: http://localhost:${PROMETHEUS_PORT}"
+	@echo "ServiceGraph: http://localhost:${SERVICEGRAPH_PORT}"
+
+cleanup:
+	kubectl delete ns istio101 istio-system

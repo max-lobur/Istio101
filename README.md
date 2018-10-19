@@ -6,10 +6,13 @@ You already have it in AWS. K8S 1.10+, kubectl v1.10+
 ### Build Docker Images
 You can skip this step. All images are public on docker hub.
 
-To build and push the code, run: `make build push`
+To build and push the code, run: 
+
+`make build push`
 
 ### Deploy Istio
 The following will create `istio-system` namespace and deploy lots of stuff there:
+
 `make deploy-istio`
 
 ### Open Monitoring
@@ -19,10 +22,6 @@ The following will create `istio-system` namespace and deploy lots of stuff ther
 This will create the three Deployments and the three Services.
 
 `make deploy-stuff`
-
-Again, you can pass in a custom project ID, but make sure it is the same as before:
-
-`make deploy-stuff PROJECT_ID=your-custom-id-here`
 
 # The Code
 
@@ -61,7 +60,7 @@ Aside from the "istio-ingressgateway", you might notice there is no trace of Ist
 
 We have launched Istio in "auto inject" mode. After the Makefile deployed Istio, the Makefile ran this command:
 
-`kubectl label namespace default istio-injection=enabled`
+`kubectl label namespace istio101 istio-injection=enabled`
 
 This means that any Pods that Kubernetes creates in the default namespace will automatically get a Istio sidecar proxy attached to it. This proxy will enforce Istio policies without any action from the app! You can also run Istio in the normal mode, and add the proxy into the Kubernetes YAML manually. Again, there is no change to the app, but the Kubernetes Deployment is manually patched. This is useful if you want some services to bypass Istio.
 
@@ -75,7 +74,7 @@ Visit the External IP of the "istio-ingressgateway". At this point, you should g
 
 Right now, the gateway is not set-up, so it is dropping all traffic at the edge. Let's set it up with this command:
 
-`kubectl create -f ./configs/istio/ingress.yaml`
+`kubectl create -f ./configs/istio/ingress.yaml` (make ingress)
 
 This file contains two objects. The first object is a Gateway, which will allow us to bind to the "istio-ingressgateway" that exists in the cluster. The second object is a VirtualService, which let's us apply routing rules. Because we are using a wildcard (*) charater for the host and only one route rule, all traffic from this gateway to the frontend service.
 
